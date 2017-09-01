@@ -30,5 +30,11 @@
         "storage",
         "notifications",
         "<all_urls>"
-    ]
+    ],
+    "applications": {
+        "gecko": {
+            "id": "{420c3e96-8f23-11e7-8641-03309a358be2}",
+            "strict_min_version": "55.0"
+        }
+    }
 }

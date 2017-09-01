@@ -96,7 +96,7 @@ export default class GithubURL {
     }
 
 
-    protected createUrlEncodedZip(url: string) {
+    protected createBlobUrl(url: string) {
         return new Promise((resolveParent, rejectParent) => {
             let xhr = new XMLHttpRequest();
             xhr.open("GET", url);
@@ -126,13 +126,12 @@ export default class GithubURL {
                     });
 
                     let options = {
-                        type: "base64",
+                        type: "blob",
                         mimeType: "application/zip"
                     };
 
-                    newZip.generateAsync(options).then(function (base64) {
-                        let dataURL = 'data:application/zip;base64,' + base64;
-                        resolveParent(dataURL);
+                    newZip.generateAsync(options).then(function (blob) {
+                        resolveParent(URL.createObjectURL(blob));
                     });
                 });
             };
@@ -178,7 +177,7 @@ export default class GithubURL {
                     }
 
                     if (this._fileType == FileType.TREE) {
-                        this.createUrlEncodedZip(downloadUrl).then(urlEncodedZip => {
+                        this.createBlobUrl(downloadUrl).then(urlEncodedZip => {
                             resolve(urlEncodedZip);
                         });
                     }
