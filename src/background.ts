@@ -1,6 +1,5 @@
 import GitHubFileDownloader from "./background/GitHubFileDownloader";
 import GitLabFileDownloader from "./background/GitLabFileDownloader";
-import CreateProperties = chrome.contextMenus.CreateProperties;
 import getStorageValues from "./helper";
 import OnClickData = chrome.contextMenus.OnClickData;
 
@@ -12,7 +11,7 @@ let gitlabUrlPatterns;
 let contextMenu;
 
 
-chrome.storage.onChanged.addListener(function(changes, namespace) {
+chrome.storage.onChanged.addListener(function (changes, namespace) {
     if (changes.urls) {
         githubUrlPatterns = changes.urls.newValue;
     }
@@ -25,7 +24,7 @@ chrome.storage.onChanged.addListener(function(changes, namespace) {
     displayContextMenu();
 });
 
-getStorageValues(function(item) {
+getStorageValues(function (item) {
     githubUrlPatterns = item.urls;
     gitlabUrlPatterns = item.gitlaburls;
     contextMenu = item.contextMenu;
@@ -40,7 +39,7 @@ function displayContextMenu() {
     if (contextMenu.saveas) {
         contextMenuSaveAs = [
             activateContextMenuSaveAs(githubUrlPatterns, GitHubFileDownloader.saveAs),
-            activateContextMenuSaveAs(gitlabUrlPatterns, GitLabFileDownloader.saveAs)
+            activateContextMenuSaveAs(gitlabUrlPatterns, GitLabFileDownloader.saveAs),
         ];
     }
 
@@ -51,12 +50,12 @@ function displayContextMenu() {
     if (contextMenu.download) {
         contextMenuSaveAs = [
             activateContextMenuDownload(githubUrlPatterns, GitHubFileDownloader.download),
-            activateContextMenuDownload(gitlabUrlPatterns, GitLabFileDownloader.download)
+            activateContextMenuDownload(gitlabUrlPatterns, GitLabFileDownloader.download),
         ];
     }
 }
 
-function activateContextMenuSaveAs(urls:string[], callback:(info: OnClickData, tab: chrome.tabs.Tab) => void) {
+function activateContextMenuSaveAs(urls: string[], callback: (info: OnClickData, tab: chrome.tabs.Tab) => void) {
     return chrome.contextMenus.create({
         title: "Save as...",
         documentUrlPatterns: urls,
@@ -65,7 +64,7 @@ function activateContextMenuSaveAs(urls:string[], callback:(info: OnClickData, t
     });
 }
 
-function activateContextMenuDownload(urls:string[], callback:(info: OnClickData, tab: chrome.tabs.Tab) => void) {
+function activateContextMenuDownload(urls: string[], callback: (info: OnClickData, tab: chrome.tabs.Tab) => void) {
     contextMenuDownload = chrome.contextMenus.create({
         title: "Download",
         documentUrlPatterns: urls,

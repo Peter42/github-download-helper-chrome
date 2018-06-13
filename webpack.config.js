@@ -3,6 +3,12 @@ const path = require('path');
 const jszip = require('jszip');
 
 module.exports = {
+    optimization: {
+        splitChunks: {
+            name: 'vendor',
+            minChunks: Infinity
+        }
+    },
     entry: {
         options: path.join(__dirname, 'src/options.ts'),
         background: path.join(__dirname, 'src/background.ts'),
@@ -13,7 +19,7 @@ module.exports = {
         filename: '[name].js'
     },
     module: {
-        loaders: [{
+        rules: [{
             exclude: /node_modules/,
             test: /\.tsx?$/,
             loader: 'ts-loader'
@@ -22,10 +28,5 @@ module.exports = {
     resolve: {
         extensions: ['.ts', '.tsx', '.js']
     },
-    plugins: [
-        new webpack.optimize.CommonsChunkPlugin({
-            name: 'vendor',
-            minChunks: Infinity
-        })
-    ]
+    plugins: []
 };
