@@ -1,6 +1,6 @@
 import OnClickData = chrome.contextMenus.OnClickData;
-import NotificationHelper from "./NotificationHelper";
 import * as ZIP from "jszip";
+import NotificationHelper from "./NotificationHelper";
 
 export default class GitLabFileDownloader {
 
@@ -12,7 +12,7 @@ export default class GitLabFileDownloader {
         if (!info || !info.linkUrl) {
             return;
         }
-        
+        NotificationHelper.create("Progress download", "", 2, true);
         const url = new URL(info.linkUrl);
         const parts = url.pathname.substr(1).split("/");
         const file = {
@@ -43,23 +43,28 @@ export default class GitLabFileDownloader {
                 GitLabFileDownloader.download_file(file, showSaveAs);
                 break;
             default:
-                alert("Sorry something went wrong");
+                NotificationHelper.create("Sorry something went wrong", "Downloading " + file + " failed.", 7);
         }
     }
-    
-    
+
+
     private static async download_file(file, showSaveAs) {
         // find hash of file
         let url = `${file.origin}/api/v4/projects/${encodeURIComponent(file.reponame)}/repository/tree?path=${encodeURIComponent(file.path)}&per_page=100`;
-        if(file.branch) {
+        if (file.branch) {
             url += `&ref=${encodeURIComponent(file.branch)}`;
         }
         let tree = await (await fetch(url, {credentials: 'include'})).json();
-        let sha = tree.filter( f => f.name === file.filename )[0].id;
-        
+        let sha = tree.filter(f => f.name === file.filename)[0].id;
+
+        let filename = file.filename;
+        if (filename) {
+            filename = filename.replace(/^[.]+/g, "");
+        }
+
         // download
         chrome.downloads.download({
-            filename: file.filename,
+            filename: filename,
             url: `${file.origin}/api/v4/projects/${encodeURIComponent(file.reponame)}/repository/blobs/${sha}/raw`,
             saveAs: showSaveAs
         });

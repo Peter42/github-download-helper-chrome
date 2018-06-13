@@ -1,6 +1,5 @@
 import GitHubFileDownloader from "./background/GitHubFileDownloader";
 import GitLabFileDownloader from "./background/GitLabFileDownloader";
-import CreateProperties = chrome.contextMenus.CreateProperties;
 import getStorageValues from "./helper";
 import OnClickData = chrome.contextMenus.OnClickData;
 
@@ -12,7 +11,7 @@ let gitlabUrlPatterns;
 let contextMenu;
 
 
-chrome.storage.onChanged.addListener(function(changes, namespace) {
+chrome.storage.onChanged.addListener(function (changes, namespace) {
     if (changes.urls) {
         githubUrlPatterns = changes.urls.newValue;
     }
@@ -40,7 +39,7 @@ function displayContextMenu() {
     if (contextMenu.saveas) {
         contextMenuSaveAs = [
             activateContextMenuSaveAs(githubUrlPatterns, GitHubFileDownloader.saveAs),
-            activateContextMenuSaveAs(gitlabUrlPatterns, GitLabFileDownloader.saveAs)
+            activateContextMenuSaveAs(gitlabUrlPatterns, GitLabFileDownloader.saveAs),
         ];
     }
 
@@ -51,7 +50,7 @@ function displayContextMenu() {
     if (contextMenu.download) {
         contextMenuSaveAs = [
             activateContextMenuDownload(githubUrlPatterns, GitHubFileDownloader.download),
-            activateContextMenuDownload(gitlabUrlPatterns, GitLabFileDownloader.download)
+            activateContextMenuDownload(gitlabUrlPatterns, GitLabFileDownloader.download),
         ];
     }
 }
